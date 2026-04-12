@@ -1,0 +1,34 @@
+.admin-card {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.badge-admin {
+  background: green;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.badge-user {
+  background: gray;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.btn-admin {
+  background: #4CAF50;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-admin:hover {
+  background: #45a049;
+}
