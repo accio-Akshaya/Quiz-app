@@ -34,7 +34,7 @@ function AdminPage() {
   const makeAdmin = async (userId) => {
     try {
       await axios.put(
-        `http://localhost:5000/api/auth/make-admin/${userId}`,
+        `${import.meta.env.VITE_API_URL}/auth/make-admin/${userId}`,
         {},
         {
           headers: {
