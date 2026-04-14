@@ -63,7 +63,7 @@ function AdminPage() {
 
   return (
     <div className="container">
-      <h1>👑 Admin Panel</h1>
+      <h1>Admin Panel</h1>
       <p className="muted">Manage users and roles</p>
 
       {users.length === 0 ? (
