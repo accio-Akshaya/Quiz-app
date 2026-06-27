@@ -107,55 +107,79 @@ export const login = async (req, res) => {
 // ================= GOOGLE LOGIN =================
 export const googleLogin = async (req, res) => {
   try {
+    console.log("========== GOOGLE LOGIN ==========");
+    console.log("BODY:", req.body);
+    console.log("GOOGLE CLIENT ID:", process.env.GOOGLE_CLIENT_ID);
+
     const { token } = req.body;
 
-    console.log("TOKEN RECEIVED:", token);
-
     if (!token) {
-      return res.status(400).json({ message: 'Token missing' });
+      return res.status(400).json({
+        message: "Google token missing"
+      });
     }
+
+    console.log("TOKEN RECEIVED");
 
     const ticket = await googleClient.verifyIdToken({
       idToken: token,
       audience: process.env.GOOGLE_CLIENT_ID
     });
 
+    console.log("TOKEN VERIFIED SUCCESSFULLY");
+
     const payload = ticket.getPayload();
 
     console.log("GOOGLE PAYLOAD:", payload);
 
-    const { sub, email, name, email_verified } = payload;
+    const {
+      sub,
+      email,
+      name,
+      email_verified
+    } = payload;
 
-    if (!email || !email_verified) {
-      return res.status(400).json({ message: 'Google email not verified' });
+    if (!email_verified) {
+      return res.status(400).json({
+        message: "Google email is not verified"
+      });
     }
 
-    let user = await User.findOne({ email: email.toLowerCase() });
+    let user = await User.findOne({
+      email: email.toLowerCase()
+    });
+
+    console.log("USER FOUND:", user ? "YES" : "NO");
 
     const isSuperAdmin =
       email.toLowerCase() === process.env.SUPER_ADMIN_EMAIL;
 
     if (!user) {
       user = await User.create({
-        name: name || email.split('@')[0],
+        name: name || email.split("@")[0],
         email: email.toLowerCase(),
         googleId: sub,
         role: isSuperAdmin ? "admin" : "user"
       });
+
+      console.log("NEW USER CREATED");
     }
 
-    const tokenJwt = signToken(user);
+    const jwtToken = signToken(user);
 
-    res.json({
-      message: 'Google login successful',
-      token: tokenJwt,
+    return res.status(200).json({
+      message: "Google login successful",
+      token: jwtToken,
       user: sanitizeUser(user)
     });
 
   } catch (error) {
-    console.error("GOOGLE ERROR FULL:", error);
-    res.status(401).json({
-      message: 'Google authentication failed',
+    console.log("========== GOOGLE ERROR ==========");
+    console.log("MESSAGE:", error.message);
+    console.log("STACK:", error);
+
+    return res.status(401).json({
+      message: "Google authentication failed",
       error: error.message
     });
   }

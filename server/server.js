@@ -18,7 +18,10 @@ connectDB();
 
 app.use(
   cors({
-    origin: "https://quiz-app-ten-gamma-77.vercel.app",
+    origin:[ 
+      "http://localhost:5173",
+      "https://quiz-app-ten-gamma-77.vercel.app",
+    ],
     credentials: true,
   })
 );
